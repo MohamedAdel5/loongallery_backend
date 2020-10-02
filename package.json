@@ -26,7 +26,11 @@
 		"hpp": "^0.2.3",
 		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^5.10.7",
+		"mongoose-id-validator": "^0.6.0",
 		"morgan": "^1.10.0",
+		"passport": "^0.4.1",
+		"passport-jwt": "^4.0.0",
+		"validator": "^13.1.17",
 		"xss-clean": "^0.1.1"
 	}
 }

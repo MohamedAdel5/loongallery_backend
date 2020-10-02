@@ -44,7 +44,7 @@ const sendErrorProd = (err, res) => {
 
 		res.status(500).json({
 			status: "error",
-			message: err.message || "something went very wrong!",
+			message: err.message || "Error. Sorry you can't proceed.",
 		});
 	}
 };

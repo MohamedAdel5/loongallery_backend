@@ -1,7 +1,7 @@
 //Include modules:-
 //-----------------------------------------------------------------
 const dotenv = require("dotenv");
-const connectDB = require("./utils/connectDB");
+const connectDB = require("./config/connectDB");
 
 //Read config file
 //-----------------------------------------------------------------

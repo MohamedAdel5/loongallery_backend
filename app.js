@@ -7,7 +7,14 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const passport = require("passport");
+
+//Controllers:-
 const errorController = require("./controllers/errorController");
+
+//Routers:-
+const authenticationRouter = require("./routes/authenticationRoutes");
+const userRouter = require("./routes/userRoutes");
 
 //Globals:-
 //-----------------------------------------------------------------
@@ -39,10 +46,19 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 //Reading data from the body of the request as json and converting it to javascript object into req.body
 app.use(express.json({ limit: "10kb" }));
 
-//Second: Data sanitization against NoSQL injection attacks.
+// Data sanitization against NoSQL injection attacks.
 app.use(mongoSanitize());
 
-//Third: Data sanitization against XSS(cross-site scripting) attacks.
+//Data sanitization against XSS(cross-site scripting) attacks.
 app.use(xss());
+
+//Passport Configuration
+require("./config/passportConfig")(passport);
+app.use(passport.initialize()); //This line must be put if we are using sessions with passport so not necessary in our app but i'll put it anyways.
+
+const apiUrlBase = `${process.env.API_URL_PREFIX}/v${process.env.API_VERSION}`;
+
+app.use(`${apiUrlBase}/authentication`, authenticationRouter);
+app.use(`${apiUrlBase}/users`, userRouter);
 
 module.exports = app;
