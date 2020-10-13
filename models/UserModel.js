@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema(
 			required: [true, "Phone numbers array must be specified."],
 			validate: [
 				{
+					validator: (v) => v.length >= 1 && v.length <= 3,
+					message: `Phone numbers array must contain at least 1 phone number and at most 3 phone numbers`,
+				},
+				{
 					validator: (v) => new Set(v).size === v.length,
 					message: `Phone numbers must not contain duplicates`,
 				},
@@ -43,6 +47,12 @@ const userSchema = new mongoose.Schema(
 		addresses: {
 			type: [String],
 			required: [true, "Addresses array must be specified."],
+			validate: [
+				{
+					validator: (v) => v.length >= 1 && v.length <= 3,
+					message: `Addresses array must contain at least 1 address and at most 3 addresses`,
+				},
+			],
 		},
 		email: {
 			type: String,
@@ -61,23 +71,20 @@ const userSchema = new mongoose.Schema(
 		},
 		passwordLastChangedAt: {
 			type: Date,
-			default: Date.now(),
+			required: [true, "PasswordLastChangedAt date property must be specified"],
 		},
 		passwordResetToken: {
 			type: String,
-			default: null,
 		},
 		passwordResetExpiresAt: {
 			type: Date,
-			default: null,
 		},
 		emailConfirmationToken: {
 			type: String,
-			default: null,
 		},
 		created_at: {
 			type: Date,
-			default: Date.now(),
+			required: [true, "Created_at date property must be specified"],
 		},
 		active: {
 			// The user's account is active --> not deleted

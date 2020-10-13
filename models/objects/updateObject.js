@@ -13,6 +13,7 @@ const updateObjectSchema = new mongoose.Schema(
 	},
 	{
 		strict: "throw",
+		_id: false
 	}
 );
 module.exports = updateObjectSchema;

@@ -40,7 +40,8 @@ const sendErrorProd = (err, res) => {
 			message: err.message,
 		});
 	} else {
-		console.error("Error!: ", err);
+		console.error("This is an unhandled error: ");
+		console.error(err);
 
 		res.status(500).json({
 			status: "error",
@@ -50,6 +51,7 @@ const sendErrorProd = (err, res) => {
 };
 
 module.exports = (err, req, res, next) => {
+	// console.log(Object.values(err.errors)[0].message);
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || "error";
 
@@ -60,6 +62,8 @@ module.exports = (err, req, res, next) => {
 			...err,
 		};
 		error.message = err.message;
+		error.name = err.name;
+
 		if (error.name === "CastError") error = handleCastErrorDB(error);
 		else if (error.code === 11000) error = handleDuplicateFields(error);
 		else if (error.name === "ValidationError") error = handleValidationErrorDB(error);

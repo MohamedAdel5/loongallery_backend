@@ -1,58 +1,20 @@
 const mongoose = require("mongoose");
 const idValidator = require("mongoose-id-validator");
-const productCategories = require("../config/productCategories");
-const customProductCategories = require("../config/customProductCategories");
 
 const OrderedProductSchema = new mongoose.Schema(
 	{
 		productID: {
 			type: mongoose.Schema.ObjectId,
 			ref: "Product",
-			default: null,
 		},
-		size: {
+		skuCode: {
 			type: String,
-			required: [true, "Product size must be specified."],
-			validate: {
-				validator: function (value) {
-					/^[0-9]{1,3} x [0-9]{1,3}$/.test(value);
-				},
-				message:
-					"The size format is incorrect. It must be in this form: 'width1 x height1'. Width and height must be 1-3 digits and separated by ' x '",
-			},
 		},
-		quantity: {
-			type: Number,
-			required: [true, "Quantity must be specified."],
+		image: {
+			type: String,
+			// required: [true, "Order image url must be specified."],
 		},
-		numberOfFaces: {
-			type: Number,
-			required: [true, "Number of faces must be specified."],
-			default: 1,
-		},
-		price: {
-			type: Number,
-			required: [true, "Price must be specified."],
-			validate: {
-				validator: function (value) {
-					let correctPrice = 0;
-					if (!!this.productID) {
-						correctPrice =
-							(process.env.productsSizesPrices[this.categories[0]].sizesPrices[this.size] +
-								(this.numberOfFaces - 1) * process.env.facePrice) *
-							this.quantity;
-					} else {
-						correctPrice =
-							(process.env.customProductsSizesPrices[this.categories[0]].sizesPrices[this.size] +
-								(this.numberOfFaces - 1) * process.env.facePrice) *
-							this.quantity;
-					}
-					return value === correctPrice;
-				},
-				message: "The calculate price is incorrect",
-			},
-		},
-		categories: {
+		productCategories: {
 			type: [String],
 			required: [true, "Product categories must be specified."],
 			validate: [
@@ -68,37 +30,79 @@ const OrderedProductSchema = new mongoose.Schema(
 					validator: function (value) {
 						if (!!this.productID) {
 							//If not custom product
-							//Check that input categories are subset of productCategories
+							//Check that input categories are subset of NON_CUSTOM_GENERAL_PRODUCTS_NAMES
+
 							return value.every(function (val) {
-								return productCategories.indexOf(val) >= 0;
+								return NON_CUSTOM_GENERAL_PRODUCTS_NAMES.indexOf(val) >= 0;
 							});
 						}
 						return true;
 					},
-					message: `Product categories must be a subset of ${productCategories}.`,
+					message: `Product categories must be a subset of ${NON_CUSTOM_GENERAL_PRODUCTS_NAMES}.`,
 				},
 				{
 					validator: function (value) {
 						if (!this.productID) {
 							//If custom product
-							//Check that input categories are subset of customProductCategories
+							//Check that input categories are subset of CUSTOM_GENERAL_PRODUCTS_NAMES
 							return value.every(function (val) {
-								return customProductCategories.indexOf(val) >= 0;
+								return CUSTOM_GENERAL_PRODUCTS_NAMES.indexOf(val) >= 0;
 							});
 						}
 						return true;
 					},
-					message: `Product categories must be a subset of ${customProductCategories}.`,
+					message: `Product categories must be a subset of ${CUSTOM_GENERAL_PRODUCTS_NAMES}.`,
 				},
 			],
 		},
-		image: {
+		size: {
 			type: String,
-			required: [true, "Order image url must be specified."],
+			required: [true, "Product size must be specified."],
+			validate: {
+				validator: function (value) {
+					return /^[0-9]{1,3} x [0-9]{1,3}$|^One size$/.test(value);
+				},
+				message:
+					"The size format is incorrect. It must be in this form: 'width1 x height1'. Width and height must be 1-3 digits and separated by ' x '",
+			},
+		},
+		numberOfFaces: {
+			type: Number,
+			required: [true, "Number of faces must be specified."],
+			min: 0,
+		},
+		quantity: {
+			type: Number,
+			required: [true, "Quantity must be specified."],
+		},
+		price: {
+			type: Number,
+			required: [true, "Price must be specified."],
+			validate: {
+				validator: function (value) {
+					let correctPrice = 0;
+
+					const facesCount = this.numberOfFaces === 0 ? 1 : this.numberOfFaces;
+					if (!!this.productID) {
+						correctPrice =
+							(NON_CUSTOM_GENERAL_PRODUCTS[this.productCategories[0]].sizesPrices[this.size] +
+								(facesCount - 1) * FACE_PRICE) *
+							this.quantity;
+					} else {
+						correctPrice =
+							(CUSTOM_GENERAL_PRODUCTS[this.productCategories[1]].sizesPrices[this.size] +
+								(facesCount - 1) * FACE_PRICE) *
+							this.quantity;
+					}
+					return value === correctPrice;
+				},
+				message: "The calculated price is incorrect",
+			},
 		},
 	},
 	{
 		strict: "throw",
+		_id: false
 	}
 );
 

@@ -5,10 +5,11 @@ const path = require("path");
 const keyPath = path.join(__dirname, "../config/keys/privateKey.pem");
 const PRIVATE_KEY = fs.readFileSync(keyPath, "utf8");
 
-module.exports = function signJwt(id) {
+module.exports = function signJwt(id, admin) {
 	const payload = {
 		sub: id,
-		iat: Math.floor(Date.now() / 1000), //Must be in seconds VIPPPPP!!!
+		iat: Math.floor(new Date() / 1000), //Must be in seconds VIPPPPP!!!
+		admin,
 	};
 
 	const signedToken = jsonwebtoken.sign(payload, PRIVATE_KEY, {

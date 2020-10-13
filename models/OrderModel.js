@@ -1,19 +1,18 @@
 const mongoose = require("mongoose");
 const idValidator = require("mongoose-id-validator");
 const orderedProductObject = require("./objects/orderedProductObject");
-const productCategories = require("./config/productCategories");
 
 const orderSchema = new mongoose.Schema(
 	{
+		code: {
+			type: Number,
+			unique: [true, "Order code must be unique."],
+			required: [true, "Order code must be specified."],
+		},
 		userID: {
 			//if signed up
 			type: mongoose.Schema.ObjectId,
 			ref: "User",
-			default: null,
-		},
-		products: {
-			type: [orderedProductObject],
-			required: [true, "Products must be specified."],
 		},
 		customerName: {
 			type: String,
@@ -21,36 +20,57 @@ const orderSchema = new mongoose.Schema(
 		},
 		customerPhoneNumbers: {
 			type: [String],
-			required: [true, "Customer phone numbers must be specified."],
-			validate: {
-				validator: function (value) {
-					//Check that input categories are subset of productCategories
-					return value.every(function (val) {
-						return productCategories.indexOf(val) >= 0;
-					});
+			required: [true, "Customer phone numbers array must be specified."],
+			validate: [
+				{
+					validator: (v) => v.length >= 1 && v.length <= 3,
+					message: `Phone numbers array must contain at least 1 phone number and at most 3 phone numbers`,
 				},
-				message: `Product categories must be a subset of ${productCategories} with no duplicates`,
-			},
+				{
+					validator: (v) => new Set(v).size === v.length,
+					message: `Phone numbers must not contain duplicates`,
+				},
+				{
+					validator: (v) => v.every((val) => /^(01)[0-9]{9}$/.test(val)),
+					message: `Phone numbers are in the wrong format`,
+				},
+			],
 		},
-		image: {
+		customerAddress: {
 			type: String,
-			required: [true, "Order image url must be specified."],
+			required: [true, "Customer address must be specified."],
 		},
-		dateOfRelease: {
+		date: {
 			type: Date,
-			required: [true, "Date of release must be specified."],
+			required: [true, "Date must be specified."],
 		},
-		dateOfUpdate: {
-			type: Date,
-			default: null,
+		products: {
+			type: [orderedProductObject],
+			required: [true, "Products must be specified."],
 		},
-		availableForSale: {
-			type: Boolean,
-			default: true,
+		shippingMethod: {
+			type: String,
+			required: [true, "Shipping method field must be specified."],
+			validate: {
+				validator: (v) => Object.keys(SHIPPING_FEES).includes(v),
+				message: `Shipping method must be one of ${Object.keys(SHIPPING_FEES)}`,
+			}
 		},
-		SalePercentage: {
+		shippingFees: {
 			type: Number,
-			default: null,
+			required: [true, "Shipping fees field must be specified."]
+		},
+		seen: {
+			type: Boolean,
+			default: false,
+		},
+		delivered: {
+			type: Boolean,
+			default: false,
+		},
+		deleted: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	{
@@ -64,5 +84,45 @@ orderSchema.plugin(idValidator, {
 	message: "Bad ID value for {PATH}",
 });
 
+orderSchema.pre(/^find/, function (next) {
+	this.find({
+		deleted: {
+			$ne: true,
+		},
+	});
+	next();
+});
+
+orderSchema.pre("countDocuments", function (next) {
+	this.find({
+		deleted: {
+			$ne: true,
+		},
+	});
+	next();
+});
+
+//Returns a select options object for public user
+orderSchema.statics.publicOrder = () => {
+	return {
+		deleted: 0,
+		__v: 0,
+	};
+};
+
+//Returns an object contains the public user info.
+orderSchema.methods.toPublic = function () {
+	const publicOrder = this.toObject({
+		virtuals: true,
+	});
+	const fieldsToExclude = orderSchema.statics.publicOrder();
+
+	Object.keys(publicOrder).forEach((el) => {
+		if (fieldsToExclude[el] === 0) {
+			delete publicOrder[el];
+		}
+	});
+	return publicOrder;
+};
 const Order = mongoose.model("Order", orderSchema);
 module.exports = Order;

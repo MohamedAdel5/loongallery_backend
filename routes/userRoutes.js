@@ -6,14 +6,30 @@ const router = express.Router();
 
 router.get("/me", authenticationController.protect(), userController.me);
 router.patch(
-	"/change-addresses",
+	"/me/change-addresses",
 	authenticationController.protect(),
+	authenticationController.restrictTo("User"),
 	userController.changeAddresses
 );
 router.patch(
-	"/change-phone-numbers",
+	"/me/change-phone-numbers",
 	authenticationController.protect(),
+	authenticationController.restrictTo("User"),
 	userController.changePhoneNumbers
+);
+
+router.get(
+	"/me/orders",
+	authenticationController.protect(),
+	authenticationController.restrictTo("User"),
+	userController.myOrders
+);
+
+router.get(
+	"/:id/orders",
+	authenticationController.protect(),
+	authenticationController.restrictTo("Admin"),
+	userController.getUserOrders
 );
 
 module.exports = router;

@@ -4,11 +4,12 @@ const generatePasswordHashAndSalt = require("../utils/generatePasswordHashAndSal
 const verifyPassword = require("../utils/verifyPassword");
 const signJwt = require("../utils/signJwt");
 const User = require("../models/UserModel");
+const Admin = require("../models/AdminModel");
+
 const passport = require("passport");
 
 module.exports.login = catchAsync(async (req, res, next) => {
 	const user = await User.findOne({ email: req.body.email });
-	console.log(user);
 	if (!user) {
 		//Invalid email
 		throw new AppError("Invalid email or password", 401);
@@ -21,10 +22,10 @@ module.exports.login = catchAsync(async (req, res, next) => {
 	}
 
 	//Valid email & pass
-	const tokenObject = signJwt(user._id);
+	const tokenObject = signJwt(user._id, false);
 	const publicUser = user.toPublic();
 	res.status(200).json({
-		success: true,
+		status: "success",
 		token: tokenObject.token,
 		expiresIn: tokenObject.expires,
 		user: publicUser,
@@ -46,14 +47,67 @@ module.exports.signup = catchAsync(async (req, res, next) => {
 		email,
 		passwordHash,
 		passwordSalt,
+		created_at: new Date(),
+		passwordLastChangedAt: new Date(),
 	});
 
 	newUser = await newUser.save(); //If there is an error it would be caught by catchAsync.
 
-	const tokenObject = signJwt(newUser._id);
+	const tokenObject = signJwt(newUser._id, false);
 	const publicUser = newUser.toPublic();
 	res.status(200).json({
-		success: true,
+		status: "success",
+		token: tokenObject.token,
+		expiresIn: tokenObject.expires,
+		user: publicUser,
+	});
+});
+
+module.exports.adminLogin = catchAsync(async (req, res, next) => {
+	const admin = await Admin.findOne({ email: req.body.email });
+	if (!admin) {
+		//Invalid email
+		throw new AppError("Invalid email or password", 401);
+	}
+
+	const isValid = verifyPassword(req.body.password, admin.passwordHash, admin.passwordSalt);
+	if (!isValid) {
+		//Invalid password
+		throw new AppError("Invalid email or password", 401);
+	}
+
+	//Valid email & pass
+	const tokenObject = signJwt(admin._id, true);
+	const publicUser = admin.toPublic();
+	res.status(200).json({
+		status: "success",
+		token: tokenObject.token,
+		expiresIn: tokenObject.expires,
+		user: publicUser,
+	});
+});
+
+module.exports.adminSignup = catchAsync(async (req, res, next) => {
+	const { name, email, password } = req.body;
+
+	Admin.validatePassword(password); //If there is an error it would be caught by catchAsync.
+	const passwordObject = generatePasswordHashAndSalt(password);
+	const passwordSalt = passwordObject.salt;
+	const passwordHash = passwordObject.hash;
+
+	let newAdmin = new Admin({
+		name,
+		email,
+		passwordHash,
+		passwordSalt,
+	});
+
+	newAdmin = await newAdmin.save(); //If there is an error it would be caught by catchAsync.
+
+	const tokenObject = signJwt(newAdmin._id, true);
+	const publicUser = newAdmin.toPublic();
+	res.status(200).json({
+		status: "success",
 		token: tokenObject.token,
 		expiresIn: tokenObject.expires,
 		user: publicUser,
@@ -62,4 +116,19 @@ module.exports.signup = catchAsync(async (req, res, next) => {
 
 module.exports.protect = () => {
 	return passport.authenticate("jwt", { session: false });
+};
+
+module.exports.restrictTo = (...roles) => {
+	return (req, res, next) => {
+		const myRole = req.user.constructor.modelName;
+
+		if (!roles.includes(myRole))
+			return next(
+				new AppError(
+					`You are unauthorized. This route is restricted to certain type of users.`,
+					401
+				)
+			);
+		else return next();
+	};
 };

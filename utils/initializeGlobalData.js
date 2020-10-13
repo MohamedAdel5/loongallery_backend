@@ -1,28 +1,16 @@
-const VariableGlobals = require("../models/GlobalVariables");
-const SizesPrices = require("../models/SizesPricesModel");
+const globalVariablesController = require("../controllers/globalVariablesController");
+const generalProductController = require("../controllers/generalProductController");
 
 module.exports = async function () {
-	process.env.facePrice = await VariableGlobals.findOne({
-		"globalObject.facePrice": { $exists: true },
-	}).globalObject.facePrice;
+	const globalVariables = await globalVariablesController.initializeGlobalVariables();
+	global.FACE_PRICE = globalVariables.facePrice;
 
-	const customProductsSizesPrices = await SizesPrices.find({ isCustomProduct: true }).select(
-		"productName sizesPrices"
-	);
-	process.env.customProductsSizesPrices = {};
-	customProductsSizesPrices.forEach((val) => {
-		process.env.customProductsSizesPrices[val.productName] = {
-			sizesPrices: val.sizesPrices,
-		};
-	});
+	const generalProductsGlobalVariables = await generalProductController.initializeGlobalVariables();
+	global.NON_CUSTOM_GENERAL_PRODUCTS = generalProductsGlobalVariables.nonCustomGeneralProducts;
+	global.CUSTOM_GENERAL_PRODUCTS = generalProductsGlobalVariables.customGeneralProducts;
+	global.SHIPPING_FEES = globalVariables.shippingFees;
 
-	const productsSizesPrices = await SizesPrices.find({ isCustomProduct: false }).select(
-		"productName sizesPrices"
-	);
-	process.env.productsSizesPrices = {};
-	productsSizesPrices.forEach((val) => {
-		process.env.productsSizesPrices[val.productName] = {
-			sizesPrices: val.sizesPrices,
-		};
-	});
+
+	global.NON_CUSTOM_GENERAL_PRODUCTS_NAMES = Object.keys(NON_CUSTOM_GENERAL_PRODUCTS);
+	global.CUSTOM_GENERAL_PRODUCTS_NAMES = ["Custom", ...Object.keys(CUSTOM_GENERAL_PRODUCTS)];
 };

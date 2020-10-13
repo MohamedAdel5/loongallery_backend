@@ -31,13 +31,25 @@ class DbQueryManager {
 		return this.dbQuery;
 	}
 	all(queryStringObject) {
-		const { fields, sort, page, limit } = queryStringObject;
+		let { fields, sort, page, limit } = queryStringObject;
+		page = page || 1;
+		limit = limit || process.env.DB_QUERY_LIMIT;
 		const filterFields = getQueryStringFilterFields(queryStringObject);
 		if (filterFields) this.filter(filterFields);
 		if (fields) this.dbQuery = this.selectFields(fields);
 		if (sort) this.dbQuery = this.sort(sort);
 		if (page && limit) this.dbQuery = this.paginate(page, limit);
 		return this.dbQuery;
+	}
+	async totalCount(queryStringObject, Model, extraFilterQuery) {
+		const filterFields = getQueryStringFilterFields(queryStringObject);
+		let fieldsStr = JSON.stringify(filterFields);
+		fieldsStr = fieldsStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+		const totalSize = await Model.countDocuments({
+			...JSON.parse(fieldsStr),
+			...extraFilterQuery,
+		});
+		return totalSize;
 	}
 }
 module.exports = DbQueryManager;

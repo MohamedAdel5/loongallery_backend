@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 const mongoose = require("mongoose");
 
-// configuring .env
+// You have to configure a .env
 
 const connectDB = async () => {
 	const DB = process.env.DATABASE;

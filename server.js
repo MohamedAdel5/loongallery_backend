@@ -44,6 +44,10 @@ process.on("SIGTERM", () => {
 //-----------------------------------------------------------------
 (async () => {
 	await connectDB();
+
+	//Initialize global variables from DB.
+	await require("./utils/initializeGlobalData")();
+
 	const app = require("./app");
 	const port = process.env.PORT || 3000;
 

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const productCategories = require("./config/productCategories");
 
 const productSchema = new mongoose.Schema(
 	{
@@ -16,25 +15,21 @@ const productSchema = new mongoose.Schema(
 					//Check for duplicates
 					if (new Set(value).size !== value.length) return false;
 
-					//Check that input categories are subset of productCategories
+					//Check that input categories are subset of NON_CUSTOM_GENERAL_PRODUCTS_NAMES
 					return value.every(function (val) {
-						return productCategories.indexOf(val) >= 0;
+						return NON_CUSTOM_GENERAL_PRODUCTS_NAMES.indexOf(val) >= 0;
 					});
 				},
-				message: `Product categories must be a subset of ${productCategories} with no duplicates`,
+				message: `Product categories must be a subset of ${NON_CUSTOM_GENERAL_PRODUCTS_NAMES} with no duplicates`,
 			},
 		},
 		image: {
 			type: String,
-			required: [true, "Product image url must be specified."],
+			// required: [true, "Product image url must be specified."], //Because the product will be created first then if the product is created successfully, the image will be uploaded then the product image will be updated
 		},
 		dateOfRelease: {
 			type: Date,
 			required: [true, "Date of release must be specified."],
-		},
-		dateOfUpdate: {
-			type: Date,
-			default: null,
 		},
 		availableForSale: {
 			type: Boolean,
@@ -42,7 +37,6 @@ const productSchema = new mongoose.Schema(
 		},
 		SalePercentage: {
 			type: Number,
-			default: null,
 		},
 	},
 	{
@@ -50,5 +44,31 @@ const productSchema = new mongoose.Schema(
 	}
 );
 
+productSchema.pre(/^find/, function (next) {
+	this.find({
+		availableForSale: {
+			$ne: false,
+		},
+	});
+	next();
+});
+
+productSchema.pre("count", function (next) {
+	this.find({
+		deleted: {
+			$ne: true,
+		},
+	});
+	next();
+});
+
+// productSchema.pre("findOne", function (next) {
+// 	this.find({
+// 		availableForSale: {
+// 			$ne: false,
+// 		},
+// 	});
+// 	next();
+// });
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;
