@@ -48,7 +48,7 @@ app.use(helmet());
 app.use(hpp());
 
 //Middleware for debugging [Displays each incoming request in the console]
-// if (process.env.NODE_ENV === "development")
+if (process.env.NODE_ENV === "development")
 app.use(morgan("dev"));
 
 //Reading data from the body of the request as json and converting it to javascript object into req.body
@@ -88,7 +88,7 @@ app.use(`${apiUrlBase}/database-backup`, databaseBackupRouter);
 
 //Setting Content-Security-Policy for images
 app.use(function (req, res, next) {
-	res.setHeader("Content-Security-Policy", "img-src 'self' https://via.placeholder.com 	https://loongallery.s3.eu-west-2.amazonaws.com");
+	res.setHeader("Content-Security-Policy", "img-src 'self' https://via.placeholder.com 	https://loongallery.s3.us-east-2.amazonaws.com");
 
 	return next();
 });

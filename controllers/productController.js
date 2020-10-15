@@ -2,7 +2,7 @@ const catchAsync = require("./../utils/catchAsync");
 const AppError = require("../utils/appError");
 const Product = require("../models/ProductModel");
 const DbQueryManager = require("../utils/dbQueryManager");
-const uploadAWSImage = require('../utils/uploadAWSImage');
+const uploadAWSImage = require('../utils/uploadAwsImage');
 
 module.exports.addProduct = catchAsync(async (req, res, next) => {
 	req.body.dateOfRelease = new Date();

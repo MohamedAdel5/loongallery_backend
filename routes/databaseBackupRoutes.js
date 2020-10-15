@@ -20,7 +20,9 @@ router.get("/", authenticationController.protect(), authenticationController.res
 	// 		}
 	// 	}
 	// });
-	exec(`mongodump --uri "${process.env.DATABASE}" --out "./databaseBackups/backup-${Date.now()}"`, function (error, stdout, stderr) {
+
+	//For restore `mongorestore --uri "${process.env.DATABASE}" --gzip --archive="./databaseBackups/backup-${Date.now()}.archive"`
+	exec(`mkdir databaseBackups; mongodump --uri "${process.env.DATABASE}" --gzip --archive="./databaseBackups/backup-${Date.now()}.archive"`, function (error, stdout, stderr) {
 		if (!error) {
 			res.status(200).json({
 				status: "success",

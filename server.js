@@ -9,7 +9,26 @@ dotenv.config({
 	path: "./config.env",
 });
 
-//Handle unhandled errors:-
+
+//Main
+//-----------------------------------------------------------------
+(async () => {
+
+	await require("./config/initializeDB")();
+
+	await connectDB();
+
+	//Initialize global variables from DB.
+	await require("./utils/initializeGlobalData")();
+
+	const app = require("./app");
+	const port = process.env.PORT || 3000;
+
+	const server = app.listen(port, () => {
+		console.log(`✅ App is running now on port ${port}...`);
+	});
+
+	//Handle unhandled errors:-
 //-----------------------------------------------------------------
 process.on("unhandledRejection", (err) => {
 	console.log(` An unhandled rejection is thrown but caught by process.on('unhandledRejection') `);
@@ -39,19 +58,4 @@ process.on("SIGTERM", () => {
 		process.exit(0);
 	});
 });
-
-//Main
-//-----------------------------------------------------------------
-(async () => {
-	await connectDB();
-
-	//Initialize global variables from DB.
-	await require("./utils/initializeGlobalData")();
-
-	const app = require("./app");
-	const port = process.env.PORT || 3000;
-
-	const server = app.listen(port, () => {
-		console.log(`App is running now on port ${port}...`);
-	});
 })();

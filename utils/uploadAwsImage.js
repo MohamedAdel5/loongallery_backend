@@ -1,5 +1,5 @@
 // const sharp = require('sharp');
-const AwsS3Api = require('./awsS3Api');
+const AwsS3Api = require('./AwsS3Api');
 const AppError = require('./appError');
 
 module.exports = async (

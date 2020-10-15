@@ -8,6 +8,22 @@ const Admin = require("../models/AdminModel");
 
 const passport = require("passport");
 
+module.exports.adminSignupService = async (name, email, password) => {
+	const passwordObject = generatePasswordHashAndSalt(password);
+	const passwordSalt = passwordObject.salt;
+	const passwordHash = passwordObject.hash;
+
+	let newAdmin = new Admin({
+		name,
+		email,
+		passwordHash,
+		passwordSalt,
+	});
+
+	newAdmin = await newAdmin.save();
+	return newAdmin;
+}
+
 module.exports.login = catchAsync(async (req, res, next) => {
 	const user = await User.findOne({ email: req.body.email });
 	if (!user) {
@@ -91,18 +107,7 @@ module.exports.adminSignup = catchAsync(async (req, res, next) => {
 	const { name, email, password } = req.body;
 
 	Admin.validatePassword(password); //If there is an error it would be caught by catchAsync.
-	const passwordObject = generatePasswordHashAndSalt(password);
-	const passwordSalt = passwordObject.salt;
-	const passwordHash = passwordObject.hash;
-
-	let newAdmin = new Admin({
-		name,
-		email,
-		passwordHash,
-		passwordSalt,
-	});
-
-	newAdmin = await newAdmin.save(); //If there is an error it would be caught by catchAsync.
+	 const newAdmin = await adminSignupService(name, email, password)//If there is an error it would be caught by catchAsync.
 
 	const tokenObject = signJwt(newAdmin._id, true);
 	const publicUser = newAdmin.toPublic();
