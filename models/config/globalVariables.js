@@ -114,7 +114,12 @@ module.exports.dbSeeds = [
 	},
 	{
 		globalObject: {
-			ourLocations: ["Rod ElFarag"],
+			ourLocations: [
+				{
+				short: "روض الفرج",
+				long: "روض الفرج: ٣٥ شارع كوباية المياه متفرع من دوران روض الفرج"
+				}
+			],
 		}
 	},
 	{
@@ -170,6 +175,14 @@ module.exports.dbSeeds = [
 						"https://via.placeholder.com/500",
 						"https://via.placeholder.com/500"
 					]
+				},
+				{
+					style: "Wood carving",
+					images: [
+						"https://via.placeholder.com/500",
+						"https://via.placeholder.com/500",
+						"https://via.placeholder.com/500"
+					]
 				}
 			]
 		}
@@ -199,6 +212,13 @@ module.exports.dbSeeds = [
 				}
 			]
 		}
-	}
-	
+	},
+	// {
+	// 	globalObject: {
+	// 		ad: {
+	// 			image: "https://via.placeholder.com/500",
+	// 			text: "an ad"
+	// 		}
+	// 	}
+	// }
 ];

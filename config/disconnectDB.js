@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
+const logger = require("../utils/logger");
 
 const disconnectDB = async () => {
 	try {
 		await mongoose.disconnect();
-		console.log("✅ database disconnected successfully.");
+		logger.log('info', "✅ database disconnected successfully.");
 	} catch (err) {
-		console.log("❌ Failed during disconnecting database");
+		logger.log('error', "❌ Failed during disconnecting database");
 	}
 };
 

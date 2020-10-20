@@ -1,4 +1,5 @@
 const AppError = require("./../utils/appError");
+const logger = require("../utils/logger");
 
 const handleCastErrorDB = (err) => {
 	const message = `invalid ${err.path}: ${err.value}`;
@@ -33,15 +34,41 @@ const sendErrorDev = (err, res) => {
 	});
 };
 
-const sendErrorProd = (err, res) => {
+const sendErrorProd = (err, req, res) => {
 	if (err.isOperational) {
 		res.status(err.statusCode).json({
 			status: err.status,
 			message: err.message,
 		});
 	} else {
-		console.error("This is an unhandled error: ");
-		console.error(err);
+		const user = (req.user)?req.user.toObject:{};
+		const request = {
+			method: req.method,
+			url: req.url,
+			body: {
+				...req.body
+			},
+			params: {
+				...req.params
+			},
+			query: {
+				...req.query
+			},
+			user: {
+				...user
+			},
+			headers: {
+				...req.headers
+			},
+			rawHeaders: {
+				...req.rawHeaders
+			},
+
+		}
+		logger.log('error', "This is an unhandled error", {
+			request,
+			err
+		});
 
 		res.status(500).json({
 			status: "error",
@@ -51,7 +78,6 @@ const sendErrorProd = (err, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-	// console.log(Object.values(err.errors)[0].message);
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || "error";
 
@@ -75,6 +101,6 @@ module.exports = (err, req, res, next) => {
 		// {
 		//     error.errors.model
 		// }
-		sendErrorProd(error, res);
+		sendErrorProd(error, req, res);
 	}
 };

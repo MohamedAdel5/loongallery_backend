@@ -24,6 +24,9 @@ exports.customGeneralProducts = {
 	Watercolor: {
 		sizesPrices: { "20 x 30": 200, "30 x 40": 280 },
 	},
+	"Wood carving": {
+		sizesPrices: { "One size": 200 }, //Undefined till the meeting
+	},
 };
 
 exports.nonCustomGeneralProducts = {
@@ -38,9 +41,6 @@ exports.nonCustomGeneralProducts = {
 	},
 	Mersal: {
 		sizesPrices: { "One size": 40 },
-	},
-	"Wood carving": {
-		sizesPrices: { "One size": 200 }, //Undefined till the meeting
 	},
 };
 
@@ -62,14 +62,6 @@ module.exports.dbSeeds = [
 		isCustomProduct: false,
 		sizesPrices: {
 			"One size": 40,
-		},
-		dateOfRelease: new Date(),
-	},
-	{
-		productName: "Wood carving",
-		isCustomProduct: false,
-		sizesPrices: {
-			"One size": 200,
 		},
 		dateOfRelease: new Date(),
 	},
@@ -127,6 +119,14 @@ module.exports.dbSeeds = [
 		sizesPrices: {
 			"20 x 30": 200,
 			"30 x 40": 280,
+		},
+		dateOfRelease: new Date(),
+	},
+	{
+		productName: "Wood carving",
+		isCustomProduct: true,
+		sizesPrices: {
+			"One size": 200,
 		},
 		dateOfRelease: new Date(),
 	},

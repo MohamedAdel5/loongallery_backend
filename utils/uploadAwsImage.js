@@ -3,11 +3,12 @@ const AwsS3Api = require('./AwsS3Api');
 const AppError = require('./appError');
 
 module.exports = async (
-  imageData,
+	imageData,
+	imageMime,
   folderName,
-  id
+	id
 ) => {
-  if (!imageData || !folderName || !id)
+  if (!imageData || !imageMime || !folderName || !id)
     throw new AppError('Missing parameters in function', 500);
   // const buf = Buffer.from(imageData, 'base64');
 
@@ -23,11 +24,11 @@ module.exports = async (
     //   .resize(dimension[0], dimension[1])
     //   .toBuffer();
 
-		const key = `images/${folderName}/${id}.jpeg`;
+		const key = `images/${folderName}/${id}.${imageMime.split('/')[1]}`;
     const url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`;
 
     // eslint-disable-next-line no-await-in-loop
-    await awsObj.s3Upload(imageData, key);
+    await awsObj.s3Upload(imageData, imageMime, key);
 
     // imgObjects.push({
     //   width: dimension[0],

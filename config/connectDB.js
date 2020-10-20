@@ -1,11 +1,11 @@
-/* istanbul ignore file */
 const mongoose = require("mongoose");
+
+const logger = require("../utils/logger");
 
 // You have to configure a .env
 
 const connectDB = async () => {
 	const DB = process.env.DATABASE;
-	if (process.env.NODE_ENV === "development") console.log(`database string: ${DB}`);
 	try {
 		await mongoose.connect(DB, {
 			useNewUrlParser: true,
@@ -13,9 +13,9 @@ const connectDB = async () => {
 			useFindAndModify: false,
 			useUnifiedTopology: true,
 		});
-		console.log("✅ database connected successfully");
+		logger.log('info', `✅ Database connected successfully ${process.env.NODE_ENV !== "production"?DB:''}`);
 	} catch (err) {
-		console.log(`❌ Error connecting to database     ${err.toString()}`);
+		logger.log('error', `❌ Error connecting to database     ${err.toString()}`);
 		process.exit(1);
 	}
 };

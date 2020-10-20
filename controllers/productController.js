@@ -2,7 +2,7 @@ const catchAsync = require("./../utils/catchAsync");
 const AppError = require("../utils/appError");
 const Product = require("../models/ProductModel");
 const DbQueryManager = require("../utils/dbQueryManager");
-const uploadAWSImage = require('../utils/uploadAwsImage');
+const uploadAwsImage = require('../utils/uploadAwsImage');
 
 module.exports.addProduct = catchAsync(async (req, res, next) => {
 	req.body.dateOfRelease = new Date();
@@ -14,8 +14,9 @@ module.exports.addProduct = catchAsync(async (req, res, next) => {
 
 	if (!req.files.image || !req.files.image.data) throw new AppError('Invalid file uploaded', 400);
 
-	const image = await uploadAWSImage(
-    req.files.image.data,
+	const image = await uploadAwsImage(
+		req.files.image.data,
+    req.files.image.mimetype,
     'products',
     `${newProduct._id}`,
 	);
@@ -60,8 +61,9 @@ module.exports.getProducts = catchAsync(async (req, res, next) => {
 module.exports.updateProduct = catchAsync(async (req, res, next) => {
 
 	if(req.files && req.files.image && req.files.image.data){
-		const image = await uploadAWSImage(
+		const image = await uploadAwsImage(
 			req.files.image.data,
+			req.files.image.mimetype,
 			'products',
 			`${req.params.id}`,
 		);
@@ -98,8 +100,9 @@ module.exports.deleteProduct = catchAsync(async (req, res, next) => {
 module.exports.uploadProductImage = catchAsync(async (req, res, next) => {
 	if (!req.files.image.data) throw new AppError('Invalid file uploaded', 400);
 
-	const image = await uploadAWSImage(
-    req.files.image.data,
+	const image = await uploadAwsImage(
+		req.files.image.data,
+    req.files.image.mimetype,
     'products',
     product._id,
   );

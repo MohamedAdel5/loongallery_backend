@@ -1,1 +1,1 @@
-module.exports = ["Decoration tableau", "Mersal", "Wood carving"];
+module.exports = ["Decoration tableau", "Mersal"];

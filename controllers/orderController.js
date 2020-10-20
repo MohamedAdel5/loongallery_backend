@@ -3,7 +3,7 @@ const AppError = require("../utils/appError");
 const Order = require("../models/OrderModel");
 const DbQueryManager = require("../utils/dbQueryManager");
 const getQueryStringFilterFields = require("./../utils/getQueryStringFilterFields");
-const uploadAWSImage = require("../utils/uploadAwsImage");
+const uploadAwsImage = require("../utils/uploadAwsImage");
 
 module.exports.addOrder = catchAsync(async (req, res, next) => {
 
@@ -21,9 +21,13 @@ module.exports.addOrder = catchAsync(async (req, res, next) => {
 			const imageName = Object.keys(req.files)[i];
 			const productIndex = Number(imageName.split('_')[1]);
 			const image = req.files[imageName];
-			const imageUrl = await uploadAWSImage(
+			const id = `${Math.floor(Math.random() * 100000)}-${Date.now()}-${productIndex}`;
+			const imageUrl = await uploadAwsImage(
 				image.data,
+				image.mimetype,
 				'custom-orders',
+				id
+
 			);
 			if (!imageUrl) throw new AppError( 'There was a problem uploading the image to the server', 500);
 			else order.products[productIndex].image = imageUrl;

@@ -123,15 +123,17 @@ class Aws {
 	/**
    * @param {Buffer} Body Data buffer to be uploaded.
    * @param {String} Key File name/path.
+   * @param {String} imageMime File mimetype.
    * @returns {Object} downloaded data buffer.
    */
-  async s3Upload(Body, Key) {
+  async s3Upload(Body, imageMime, Key) {
     const params = {
 			Body,
 			Key,
 			Bucket: process.env.AWS_BUCKET_NAME,
 			ACL: 'public-read',
-			CacheControl: `max-age=${3600 * 24 * process.env.AWS_CACHE_MAX_AGE}`
+			CacheControl: `max-age=${3600 * 24 * process.env.AWS_CACHE_MAX_AGE}`,
+			ContentType: imageMime
 		};
 		try{
 			const data = await this.s3.putObject(params).promise();
@@ -140,6 +142,24 @@ class Aws {
 		}
 		catch(err){
 			throw new AppError('Upload validation failed', 500);
+		}
+	}
+	
+	/**
+   * @param {String} Key File name/path.
+   */
+	async s3Delete(Key) {
+    const params = {
+			Key,
+			Bucket: process.env.AWS_BUCKET_NAME
+		};
+		try{
+			await this.s3.deleteObject(params).promise();
+			return true;
+
+		}
+		catch(err){
+			throw new AppError('Deletion failed', 500);
 		}
   }
 }

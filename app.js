@@ -9,6 +9,8 @@ const xss = require("xss-clean");
 const hpp = require("hpp");
 const passport = require("passport");
 const path = require("path");
+const compression = require("compression")
+
 
 //Controllers:-
 const errorController = require("./controllers/errorController");
@@ -20,7 +22,10 @@ const productRouter = require("./routes/productRoutes");
 const orderRouter = require("./routes/orderRoutes");
 const generalProductRouter = require("./routes/generalProductRoutes");
 const globalVariablesRouter = require("./routes/globalVariablesRoutes");
+const adRouter = require("./routes/adRoutes");
+const emailRouter = require("./routes/emailRoutes");
 const databaseBackupRouter = require("./routes/databaseBackupRoutes");
+
 
 
 //Globals:-
@@ -64,9 +69,15 @@ app.use(xss());
 require("./config/passportConfig")(passport);
 app.use(passport.initialize()); //This line must be put if we are using sessions with passport so not necessary in our app but i'll put it anyways.
 
+//Compress responses before sending it.
+app.use(compression());
+
+
 //For testing only
 app.use((req, res, next) => {
-	res.setHeader("Access-Control-Allow-Origin", "*");
+	if(process.env.NODE_ENV !== "production"){
+		res.setHeader("Access-Control-Allow-Origin", "*");
+	}
 	res.setHeader("Access-Control-Allow-Headers", "content-type, authorization");
 	res.setHeader("Access-Control-Allow-Methods", "*");
 	next();
@@ -83,6 +94,8 @@ app.use(`${apiUrlBase}/products`, productRouter);
 app.use(`${apiUrlBase}/orders`, orderRouter);
 app.use(`${apiUrlBase}/general-products`, generalProductRouter);
 app.use(`${apiUrlBase}/global-variables`, globalVariablesRouter);
+app.use(`${apiUrlBase}/ads`, adRouter);
+app.use(`${apiUrlBase}/emails`, emailRouter);
 app.use(`${apiUrlBase}/database-backup`, databaseBackupRouter);
 
 

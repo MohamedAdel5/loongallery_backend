@@ -1,7 +1,7 @@
 //Include modules:-
 //-----------------------------------------------------------------
 const dotenv = require("dotenv");
-const connectDB = require("./config/connectDB");
+
 
 //Read config file
 //-----------------------------------------------------------------
@@ -9,15 +9,20 @@ dotenv.config({
 	path: "./config.env",
 });
 
-
+//Modules that require dotenv to be defined
+//-----------------------------------------------------------------
+const logger = require("./utils/logger");
+const connectDB = require("./config/connectDB");
 //Main
 //-----------------------------------------------------------------
 (async () => {
 
-	await require("./config/initializeDB")();
-
+	//Initialize db global variables
 	await connectDB();
 
+	await require("./config/initializeDB")();
+
+	
 	//Initialize global variables from DB.
 	await require("./utils/initializeGlobalData")();
 
@@ -25,34 +30,33 @@ dotenv.config({
 	const port = process.env.PORT || 3000;
 
 	const server = app.listen(port, () => {
-		console.log(`✅ App is running now on port ${port}...`);
+		logger.log('info', `✅ App is running now on port ${port}...`);
 	});
 
 	//Handle unhandled errors:-
 //-----------------------------------------------------------------
 process.on("unhandledRejection", (err) => {
-	console.log(` An unhandled rejection is thrown but caught by process.on('unhandledRejection') `);
-	console.log(err);
+	logger.log('error', ` An unhandled rejection is thrown but caught by process.on('unhandledRejection') `);
+	logger.log('error', err);
 	server.close(() => {
 		process.exit(1);
 	});
 });
 
 process.on("uncaughtException", (err) => {
-	console.log(` An uncaught exception is thrown but caught by process.on('uncaughtException') `);
-	console.log(err);
+	logger.log('error', ` An uncaught exception is thrown but caught by process.on('uncaughtException') `);
+	logger.log('error', err);
 	server.close(() => {
 		process.exit(1);
 	});
 });
 
 process.on("warning", (e) => {
-	console.log(` A warning is thrown but caught by process.on('warn') `);
-	console.warn(e.stack);
+	logger.log('warn', ` A warning is thrown but caught by process.on('warn') `, {stack: e.stack});
 });
 
 process.on("SIGTERM", () => {
-	console.log(` SIGTERM caught by process.on('SIGTERM') `);
+	logger.log('error', ` SIGTERM caught by process.on('SIGTERM') `);
 
 	server.close(() => {
 		process.exit(0);

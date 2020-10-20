@@ -6,39 +6,39 @@ const authenticationController = require("../controllers/authenticationControlle
 const generalProducts = require("../models/config/generalProducts");
 const gobalVariables = require("../models/config/globalVariables");
 
-const connectDB = require("./connectDB");
-const disconnectDB = require("./disconnectDB");
+const logger = require("../utils/logger");
 
-const dotenv = require("dotenv");
-dotenv.config({
-	path: "./config.env",
-});
 
 const initializeDB = async () => {
-	await connectDB();
+	logger.log('info', `⏳ Checking DB.`);
 	const globalVariablesCount = (await GlobalVariables.find()).length;
+	const generalProductsCount = (await GeneralProduct.find()).length;
+	const adminsCount = (await Admin.find()).length;
+	if(!(globalVariablesCount <= 0 || generalProductsCount  <= 0 || adminsCount  <= 0))
+	{
+		logger.log('info', `✅ DB is okay.`);
+		return;
+	}
+	logger.log('info', `🏁 DB is not initialized. Started db seeding...`);
+
 	if( globalVariablesCount <= 0)
 	{
-		console.log(`global variables count --> ${globalVariablesCount}✅`);
+		logger.log('info', `✅ Global variables are seeded --> count = ${globalVariablesCount}`);
 		await GlobalVariables.insertMany(gobalVariables.dbSeeds);
 	}
-	const generalProductsCount = (await GeneralProduct.find()).length
 	if(generalProductsCount  <= 0)
 	{
-		console.log(`general products count --> ${generalProductsCount}✅✅`);
+		logger.log('info', `✅ General products are seeded --> count = ${generalProductsCount}`);
 		await GeneralProduct.insertMany(generalProducts.dbSeeds);
 	}
 
-	const adminsCount = (await Admin.find()).length;
 	if(adminsCount  <= 0)
 	{
-		console.log(`admins count --> ${adminsCount}✅✅✅`);
+		logger.log('info', `✅ Admins are seeded --> count = ${adminsCount}`);
 		await authenticationController.adminSignupService(process.env.ADMIN_DEFAULT_NAME, process.env.ADMIN_DEFAULT_EMAIL, process.env.ADMIN_DEFAULT_PASSWORD);
 	}
 
-	console.log("✅ Finished db seeding successfully");
-	disconnectDB();
+	logger.log('info', `✅ Finished db seeding successfully`);
 };
 module.exports = initializeDB;
 
-// initializeDB();
