@@ -45,8 +45,9 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-//Adds security headers (Should be put at the top of the middleware stack)
-app.use(helmet());
+//Adds security headers (Should be put at the top of the middleware stack) 
+//[Causes problems on production ??!!]
+//app.use(helmet());
 
 // Prevent parameter pollution (prevents duplicate query string parameters & duplicate keys in urlencoded body requests)
 // Add a second HPP middleware to apply the whitelist only to this route. e.g: app.use('/search', hpp({ whitelist: [ 'filter' ] }));
