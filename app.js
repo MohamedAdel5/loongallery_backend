@@ -79,6 +79,9 @@ app.use((req, res, next) => {
 	if(process.env.NODE_ENV !== "production"){
 		res.setHeader("Access-Control-Allow-Origin", "*");
 	}
+	else{
+		res.setHeader("Access-Control-Allow-Origin", "http://www.loongallery.com");
+	}
 	res.setHeader("Access-Control-Allow-Headers", "content-type, authorization");
 	res.setHeader("Access-Control-Allow-Methods", "*");
 	next();
