@@ -15,7 +15,8 @@ router.get("/", authenticationController.protect(), authenticationController.res
 		fs.mkdirSync("./databaseBackups");
 	}
 	//For restore `mongorestore --uri "${process.env.DATABASE}" --gzip --archive="./databaseBackups/backup-${Date.now()}.archive"`
-	const filePath = `./databaseBackups/backup-${Date.now()}.archive`;
+	const fileName = `backup-${Date.now()}.archive`;
+	const filePath = `./databaseBackups/${fileName}`;
 	exec(`mongodump --uri "${process.env.DATABASE}" --gzip --archive="${filePath}"`, function (error, stdout, stderr) {
 		if(error) {	
 			res.status(500).json({
@@ -34,7 +35,7 @@ router.get("/", authenticationController.protect(), authenticationController.res
 			// res.on('error', (err) => {
 			// 	throw new Error("fail");
 			// });
-			res.download(`${filePath}`);
+			res.download(`${filePath}`, fileName);
 		}
 		catch(err){
 			res.status(500).json({

@@ -83,6 +83,7 @@ app.use((req, res, next) => {
 		res.setHeader("Access-Control-Allow-Origin", "http://www.loongallery.com");
 	}
 	res.setHeader("Access-Control-Allow-Headers", "content-type, authorization");
+	res.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
 	res.setHeader("Access-Control-Allow-Methods", "*");
 	next();
 });
