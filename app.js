@@ -99,7 +99,7 @@ app.use(`${apiUrlBase}/products`, productRouter);
 app.use(`${apiUrlBase}/orders`, orderRouter);
 app.use(`${apiUrlBase}/general-products`, generalProductRouter);
 app.use(`${apiUrlBase}/global-variables`, globalVariablesRouter);
-app.use(`${apiUrlBase}/ads`, adRouter);
+app.use(`${apiUrlBase}/offers`, adRouter);
 app.use(`${apiUrlBase}/emails`, emailRouter);
 app.use(`${apiUrlBase}/database-backup`, databaseBackupRouter);
 
