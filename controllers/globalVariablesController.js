@@ -73,6 +73,7 @@ module.exports.initializeGlobalVariables = async () => {
 	const shippingFeesObject = await GlobalVariables.findOne({
 		"globalObject.shippingFees": { $exists: true },
 	});
+	
 	return {
 		...facePriceObject.globalObject,
 		...shippingFeesObject.globalObject

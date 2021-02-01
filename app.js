@@ -61,7 +61,17 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: "10kb" }));
 
 // Data sanitization against NoSQL injection attacks.
-app.use(mongoSanitize());
+// //but before using it, whitelist some parameters
+// app.use((req,res,next)=>{
+// 	if(req.query['generalProduct.productName'])
+// 	{
+// 		req.query_whitelist = {
+// 			'generalProduct.productName': req.query['generalProduct.productName']
+// 		};
+// 	}
+// 	next();
+// })
+app.use(mongoSanitize({}));
 
 //Data sanitization against XSS(cross-site scripting) attacks.
 app.use(xss());

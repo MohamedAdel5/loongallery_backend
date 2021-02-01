@@ -35,10 +35,10 @@ module.exports.addOrder = catchAsync(async (req, res, next) => {
 	}
 
 	order.date = new Date();
-	if(order.shippingMethod) //Else will be caught by model validation
-		order.shippingFees = SHIPPING_FEES[order.shippingMethod];
+	if(order.shippingMethod || order.shippingMethod === 0) //Else will be caught by model validation
+		order.shippingFees = SHIPPING_FEES[order.shippingMethod].fees;
 	order.code = (await Order.estimatedDocumentCount()) + 1;
-	const newOrder = await Order.create(order);
+	const newOrder = await (await Order.create(order)).populate({ path: 'products.generalProduct', select: 'productName productName_Ar' }).execPopulate();
 	res.status(200).json({
 		status: "success",
 		order: newOrder.toPublic(),

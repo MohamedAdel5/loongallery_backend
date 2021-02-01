@@ -60,6 +60,7 @@ const orderSchema = new mongoose.Schema(
 			type: Number,
 			required: [true, "Shipping fees field must be specified."]
 		},
+		// For Admins
 		seen: {
 			type: Boolean,
 			default: false,
@@ -92,7 +93,10 @@ orderSchema.pre(/^find/, function (next) {
 	});
 	next();
 });
-
+orderSchema.pre(/^find/, function (next) {
+	this.populate({ path: 'products.generalProduct', select: 'productName productName_Ar' });
+	next();
+});
 orderSchema.pre("countDocuments", function (next) {
 	this.find({
 		deleted: {

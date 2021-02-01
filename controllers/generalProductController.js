@@ -19,13 +19,14 @@ module.exports.getOneProductSizesPrices = catchAsync(async (req, res, next) => {
 	res.status(200).json({
 		status: "success",
 		productName: generalProduct.productName,
+		productName_Ar: generalProduct.productName_Ar,
 		sizesPrices: generalProduct.sizesPrices,
 	});
 });
 
 module.exports.getNonCustomProductsSizesPrices = catchAsync(async (req, res, next) => {
 	const generalProducts = await GeneralProduct.find({ isCustomProduct: false }).select(
-		"productName sizesPrices"
+		"productName productName_Ar sizesPrices"
 	);
 	res.status(200).json({
 		status: "success",
@@ -35,7 +36,7 @@ module.exports.getNonCustomProductsSizesPrices = catchAsync(async (req, res, nex
 
 module.exports.getCustomProductsSizesPrices = catchAsync(async (req, res, next) => {
 	const generalProducts = await GeneralProduct.find({ isCustomProduct: true }).select(
-		"productName sizesPrices"
+		"productName productName_Ar sizesPrices"
 	);
 	res.status(200).json({
 		status: "success",
@@ -70,26 +71,28 @@ module.exports.updateProductSizesPrices = catchAsync(async (req, res, next) => {
 module.exports.initializeGlobalVariables = async () => {
 	const tmpnonCustomGeneralProducts = JSON.parse(
 		JSON.stringify(
-			await GeneralProduct.find({ isCustomProduct: false }).select("productName sizesPrices")
+			await GeneralProduct.find({ isCustomProduct: false }).select("_id productName sizesPrices")
 		)
 	);
 
 	const tmpcustomGeneralProducts = JSON.parse(
 		JSON.stringify(
-			await GeneralProduct.find({ isCustomProduct: true }).select("productName sizesPrices")
+			await GeneralProduct.find({ isCustomProduct: true }).select("_id productName sizesPrices")
 		)
 	);
 
 	const nonCustomGeneralProducts = {};
 	for (let val of tmpnonCustomGeneralProducts) {
-		nonCustomGeneralProducts[val.productName] = {
+		nonCustomGeneralProducts[val._id] = {
+			productName: val.productName,
 			sizesPrices: val.sizesPrices,
 		};
 	}
 
 	const customGeneralProducts = {};
 	for (let val of tmpcustomGeneralProducts) {
-		customGeneralProducts[val.productName] = {
+		customGeneralProducts[val._id] = {
+			productName: val.productName,
 			sizesPrices: val.sizesPrices,
 		};
 	}

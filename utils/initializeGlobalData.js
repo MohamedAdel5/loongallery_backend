@@ -11,6 +11,7 @@ module.exports = async function () {
 	global.SHIPPING_FEES = globalVariables.shippingFees;
 
 
-	global.NON_CUSTOM_GENERAL_PRODUCTS_NAMES = Object.keys(NON_CUSTOM_GENERAL_PRODUCTS);
-	global.CUSTOM_GENERAL_PRODUCTS_NAMES = ["Custom", ...Object.keys(CUSTOM_GENERAL_PRODUCTS)];
+	// These variables are no longer used.
+	// global.NON_CUSTOM_GENERAL_PRODUCTS_NAMES = Object.keys(NON_CUSTOM_GENERAL_PRODUCTS);
+	// global.CUSTOM_GENERAL_PRODUCTS_NAMES = ["Custom", ...Object.keys(CUSTOM_GENERAL_PRODUCTS)];
 };

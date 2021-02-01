@@ -11,6 +11,10 @@ const generalProductSchema = new mongoose.Schema(
 			],
 			required: [true, "The product name must be specified."],
 		},
+		productName_Ar: {
+			type: String,
+			required: [true, "The product name in arabic must be specified."],
+		},
 		sizesPrices: {
 			type: Object,
 			required: [true, "Product sizes prices object must be specified."],

@@ -101,15 +101,124 @@ module.exports.dbSeeds = [
 				"Bulaq El-Dakroor",
 				"Cairo University",
 			],
+			metroStations_ar:[
+				"حلوان",
+				"عين حلوان",
+				"جامعة حلوان",
+				"وادي حوف",
+				"حدائق حلوان",
+				"المعصرة",
+				"طرة الأسمنت",
+				"كوتسيكا",
+				"طرة البلد",
+				"ثكنات المعادي",
+				"المعادي",
+				"حدائق المعادي",
+				"دار السلام",
+				"الزهراء",
+				"مار جرجس",
+				"الملك الصالح",
+				"السيدة زينب",
+				"سعد زغلول",
+				"السادات",
+				"ناصر",
+				"عرابي",
+				"الشهداء",
+				"غمرة",
+				"الدمرداش",
+				"منشية الصدر",
+				"كوبري القبة",
+				"حمامات القبة",
+				"سراي القبة",
+				"حدائق الزيتون",
+				"حلمية الزيتون",
+				"المطرية",
+				"عين شمس",
+				"عزبة النخل",
+				"المرج",
+				"المرج الجديدة",
+
+
+
+				"المنيب",
+				"ساقية مكي",
+				"أم المصريين",
+				"الجيزة",
+				"فيصل",
+				"جامعة القاهرة",
+				"البحوث",
+				"الدقي",
+				"الأوبرا",
+				"السادات",
+				"محمد نجيب",
+				"العتبة",
+				"الشهداء",
+				"مسرة",
+				"روض الفرج",
+				"سانتا تريزا",
+				"الخلفاوي",
+				"المظلات",
+				"كلية الزراعة",
+				"شبرا الخيمة",
+
+
+				"المطار",
+				"عدلي منصور",
+				"الهايكستب",
+				"عمر بن الخطاب",
+				"قباء",
+				"هشام بركات",
+				"النزهة",
+				"نادي الشمس",
+				"ألف مسكن",
+				"ميدان هليوبوليس",
+				"هارون",
+				"الأهرام",
+				"كلية البنات",
+				"ستاد القاهرة",
+				"المعرض",
+				"العباسية",
+				"عبده باشا",
+				"الجيش",
+				"باب الشعرية",
+				"العتبة",
+				"ناصر",
+				"ماسبيرو",
+				"الزمالك",
+				"الكيت كات",
+				"السودان",
+				"إمبابة",
+				"المنيرة",
+				"الطريق الدائري",
+				"محور روض الفرج",
+				"التوفيقية",
+				"وادي النيل",
+				"مسجد مصطفى محمود",
+				"شهاب",
+				"بولاق الدكرور",
+				"جامعة القاهرة"
+			]
 		}
 	},
 	{
 		globalObject: {
-			shippingFees: {
-				home: 35,
-				metro: 20,
-				ourLocation: 0,
-			},
+			shippingFees: [
+				{
+					name_en: "Deliver to home",
+					name_ar: "التوصيل للمنزل",
+					fees: 35
+				},
+				{
+					name_en: "Deliver to metro station",
+					name_ar: "التوصيل لمحطة مترو",
+					fees: 20
+				},
+				// {
+				// 	name_en: "Receive from our location",
+				// 	name_ar: "الاستلام من مقر الشركة",
+				// 	fees: 0
+				// }
+			]
 		}
 	},
 	{
@@ -127,6 +236,7 @@ module.exports.dbSeeds = [
 			drawingStylesExamples: [
 				{
 					style: "Digital drawing",
+					style_Ar: "رسم ديجيتال",
 					images: [
 						"https://via.placeholder.com/500",
 						"https://via.placeholder.com/500",
@@ -138,6 +248,7 @@ module.exports.dbSeeds = [
 				},
 				{
 					style: "Coal drawing",
+					style_Ar: "رسم بالفحم",
 					images: [
 						"https://via.placeholder.com/500",
 						"https://via.placeholder.com/500",
@@ -146,6 +257,7 @@ module.exports.dbSeeds = [
 				},
 				{
 					style: "Pencil drawing",
+					style_Ar: "رسم بالقلم الرصاص",
 					images: [
 						"https://via.placeholder.com/500",
 						"https://via.placeholder.com/500",
@@ -154,6 +266,7 @@ module.exports.dbSeeds = [
 				},
 				{
 					style: "Pen drawing",
+					style_Ar: "رسم بالقلم الجاف",
 					images: [
 						"https://via.placeholder.com/500",
 						"https://via.placeholder.com/500",
@@ -162,6 +275,7 @@ module.exports.dbSeeds = [
 				},
 				{
 					style: "Gouache",
+					style_Ar: "رسم بألوان الجواش",
 					images: [
 						"https://via.placeholder.com/500",
 						"https://via.placeholder.com/500",
@@ -170,6 +284,7 @@ module.exports.dbSeeds = [
 				},
 				{
 					style: "Watercolor",
+					style_Ar: "رسم بالألوان المائية ",
 					images: [
 						"https://via.placeholder.com/500",
 						"https://via.placeholder.com/500",
@@ -178,6 +293,7 @@ module.exports.dbSeeds = [
 				},
 				{
 					style: "Wood carving",
+					style_Ar: "نحت على الخشب",
 					images: [
 						"https://via.placeholder.com/500",
 						"https://via.placeholder.com/500",
@@ -215,10 +331,13 @@ module.exports.dbSeeds = [
 	},
 	// {
 	// 	globalObject: {
-	// 		ad: {
+	// 		announcement: {
 	// 			image: "https://via.placeholder.com/500",
-	// 			text: "an ad"
+	// 			text: "an announcement",
+	//			enabled: true
 	// 		}
 	// 	}
 	// }
 ];
+
+

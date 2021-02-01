@@ -3,8 +3,8 @@ const GlobalVariables = require("../models/GlobalVariablesModel");
 const Admin = require("../models/AdminModel");
 const authenticationController = require("../controllers/authenticationController");
 
-const generalProducts = require("../models/config/generalProducts");
-const gobalVariables = require("../models/config/globalVariables");
+const generalProducts = require("../models/seeds/generalProductsSeeds");
+const gobalVariables = require("../models/seeds/globalVariablesSeeds");
 
 const logger = require("../utils/logger");
 

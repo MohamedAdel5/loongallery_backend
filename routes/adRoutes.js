@@ -14,21 +14,21 @@ const router = express.Router();
 router
 	.route("/")
 	.get((req,res,next)=> {
-		req.params.globalVariableName = "ad";
+		req.params.globalVariableName = "announcement";
 		next();
 	},globalVariablesController.getGlobalVariable)
 	.delete(authenticationController.protect(),
 	authenticationController.restrictTo("Admin"),
 	catchAsync(async (req,res,next)=> {
-		const currentAd = await globalVariablesController.getGlobalVariableService("ad");
-		if(currentAd){
-			await deleteAwsImage(currentAd.globalObject.ad.image);
-			await globalVariablesController.deleteGlobalVariableService("ad");
+		const currentAnnouncement = await globalVariablesController.getGlobalVariableService("announcement");
+		if(currentAnnouncement){
+			await deleteAwsImage(currentAnnouncement.globalObject.announcement.image);
+			await globalVariablesController.deleteGlobalVariableService("announcement");
 		}
 
 		res.status(200).json({
 			status: "success",
-			message: "Ad is deleted successfully."
+			message: "Announcement is deleted successfully."
 		});
 	}))
 	.post(
@@ -36,38 +36,38 @@ router
 		authenticationController.restrictTo("Admin"),
 		fileUpload(),
 		catchAsync(async (req,res,next)=> {
-			if(!req.files || !req.files['adImage']) throw new AppError("There is no image file for the ad found in your request.", 400);
+			if(!req.files || !req.files['announcementImage']) throw new AppError("There is no image file for the announcement found in your request.", 400);
 
-			const image = req.files['adImage'];
+			const image = req.files['announcementImage'];
 			const id = `${Math.floor(Math.random() * 100000)}-${Date.now()}`;
 
 			const imageUrl = await uploadAwsImage(
 				image.data,
 				image.mimetype,
-				'ads',
+				'announcements',
 				id
 			);
 			if (!imageUrl) throw new AppError( 'There was a problem uploading the image to the server', 500);
-			const newAd = {
+			const newAnnouncement = {
 				globalObject: {
-					ad: {
+					announcement: {
 						image: imageUrl,
-						text: req.body.adText ? req.body.adText: '',
+						text: req.body.announcementText ? req.body.announcementText: '',
 						enabled: true
 					}
 				}
 			}
-			const currentAd = await globalVariablesController.getGlobalVariableService("ad");
-			if(!currentAd){
-				await globalVariablesController.addGlobalVariableService(newAd)
+			const currentAnnouncement = await globalVariablesController.getGlobalVariableService("announcement");
+			if(!currentAnnouncement){
+				await globalVariablesController.addGlobalVariableService(newAnnouncement)
 			}
 			else{
-				await deleteAwsImage(currentAd.globalObject.ad.image);
-				await globalVariablesController.updateGlobalVariableService("ad", newAd.globalObject);
+				await deleteAwsImage(currentAnnouncement.globalObject.announcement.image);
+				await globalVariablesController.updateGlobalVariableService("announcement", newAnnouncement.globalObject);
 			}
 			res.status(200).json({
 				status: "success",
-				message: "Ad updated successfully"
+				message: "Announcement updated successfully"
 			})
 		})
 	);
