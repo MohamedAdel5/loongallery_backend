@@ -8,27 +8,27 @@ router.get("/me", authenticationController.protect(), userController.me);
 router.patch(
 	"/me/change-addresses",
 	authenticationController.protect(),
-	authenticationController.restrictTo("User"),
+	authenticationController.restrictTo( "User"),
 	userController.changeAddresses
 );
 router.patch(
 	"/me/change-phone-numbers",
 	authenticationController.protect(),
-	authenticationController.restrictTo("User"),
+	authenticationController.restrictTo( "User"),
 	userController.changePhoneNumbers
 );
 
 router.get(
 	"/me/orders",
 	authenticationController.protect(),
-	authenticationController.restrictTo("User"),
+	authenticationController.restrictTo( "User"),
 	userController.myOrders
 );
 
 router.get(
 	"/:id/orders",
 	authenticationController.protect(),
-	authenticationController.restrictTo("Admin"),
+	authenticationController.restrictTo( "Admin"),
 	userController.getUserOrders
 );
 

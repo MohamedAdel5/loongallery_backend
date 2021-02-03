@@ -25,6 +25,7 @@ const adminSchema = new mongoose.Schema(
 					message: "Name must not exceed 50 characters",
 				},
 			],
+
 		},
 		email: {
 			type: String,
@@ -41,6 +42,10 @@ const adminSchema = new mongoose.Schema(
 			type: String,
 			required: [true, "Password salt is required."],
 		},
+		authority: {
+			type: String,
+			required: [true, "Authority is required."],
+		}
 	},
 	{
 		strict: "throw",

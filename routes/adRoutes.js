@@ -18,7 +18,7 @@ router
 		next();
 	},globalVariablesController.getGlobalVariable)
 	.delete(authenticationController.protect(),
-	authenticationController.restrictTo("Admin"),
+	authenticationController.restrictTo( "Admin"),
 	catchAsync(async (req,res,next)=> {
 		const currentAnnouncement = await globalVariablesController.getGlobalVariableService("announcement");
 		if(currentAnnouncement){
@@ -33,7 +33,7 @@ router
 	}))
 	.post(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		fileUpload(),
 		catchAsync(async (req,res,next)=> {
 			if(!req.files || !req.files['announcementImage']) throw new AppError("There is no image file for the announcement found in your request.", 400);

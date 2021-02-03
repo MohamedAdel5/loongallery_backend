@@ -37,6 +37,9 @@ const productSchema = new mongoose.Schema(
 			type: String,
 			// required: [true, "Product image url must be specified."], //Because the product will be created first then if the product is created successfully, the image will be uploaded then the product image will be updated
 		},
+		description: {
+			type: String
+		},
 		dateOfRelease: {
 			type: Date,
 			required: [true, "Date of release must be specified."],

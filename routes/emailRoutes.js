@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/broadcast",
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		catchAsync(async (req,res,next)=> {
 			if(!req.body.emailContent || !req.body.emailSubject) throw new AppError("There is no email text found in your request.", 400);
 			const emailsArray = (await User.find({}, {email: 1, _id:0}).lean({virtuals:false})).map(obj=> obj.email);

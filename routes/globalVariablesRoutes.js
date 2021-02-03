@@ -9,7 +9,7 @@ router
 	.get(globalVariablesController.getGlobalVariable)
 	.patch(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		globalVariablesController.updateGlobalVariable
 	);
 

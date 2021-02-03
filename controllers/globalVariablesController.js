@@ -70,12 +70,20 @@ module.exports.initializeGlobalVariables = async () => {
 	const facePriceObject = await GlobalVariables.findOne({
 		"globalObject.facePrice": { $exists: true },
 	});
+	const giftBowPriceObject = await GlobalVariables.findOne({
+		"globalObject.giftBowPrice": { $exists: true },
+	});
+	const giftWrapPriceObject = await GlobalVariables.findOne({
+		"globalObject.giftWrapPrice": { $exists: true },
+	});
 	const shippingFeesObject = await GlobalVariables.findOne({
 		"globalObject.shippingFees": { $exists: true },
 	});
 	
 	return {
 		...facePriceObject.globalObject,
+		...giftBowPriceObject.globalObject,
+		...giftWrapPriceObject.globalObject,
 		...shippingFeesObject.globalObject
 	};
 };

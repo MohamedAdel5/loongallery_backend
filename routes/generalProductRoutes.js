@@ -8,7 +8,7 @@ router
 	.route("/")
 	.post(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		generalProductController.addGeneralProduct
 	);
 
@@ -21,7 +21,7 @@ router
 	.get(generalProductController.getOneProductSizesPrices)
 	.patch(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		generalProductController.updateProductSizesPrices
 	);
 

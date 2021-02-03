@@ -5,7 +5,7 @@ const databaseBackupController = require("./../controllers/databaseBackupControl
 
 const router = express.Router();
 
-router.get("/", authenticationController.protect(), authenticationController.restrictTo("Admin"), databaseBackupController.databaseBackup);
+router.get("/", authenticationController.protect(), authenticationController.restrictTo( "Admin"), databaseBackupController.databaseBackup);
 
 
 module.exports = router;

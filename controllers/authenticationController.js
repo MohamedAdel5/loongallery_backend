@@ -8,7 +8,8 @@ const Admin = require("../models/AdminModel");
 
 const passport = require("passport");
 
-module.exports.adminSignupService = async (name, email, password) => {
+const adminSignupService = async (name, email, password, authority) => {
+	console.log(name, email, password, authority);
 	const passwordObject = generatePasswordHashAndSalt(password);
 	const passwordSalt = passwordObject.salt;
 	const passwordHash = passwordObject.hash;
@@ -16,6 +17,7 @@ module.exports.adminSignupService = async (name, email, password) => {
 	let newAdmin = new Admin({
 		name,
 		email,
+		authority,
 		passwordHash,
 		passwordSalt,
 	});
@@ -23,6 +25,7 @@ module.exports.adminSignupService = async (name, email, password) => {
 	newAdmin = await newAdmin.save();
 	return newAdmin;
 }
+module.exports.adminSignupService = adminSignupService;
 
 module.exports.login = catchAsync(async (req, res, next) => {
 	const user = await User.findOne({ email: req.body.email });
@@ -104,10 +107,10 @@ module.exports.adminLogin = catchAsync(async (req, res, next) => {
 });
 
 module.exports.adminSignup = catchAsync(async (req, res, next) => {
-	const { name, email, password } = req.body;
+	const { name, email, password, authority } = req.body;
 
 	Admin.validatePassword(password); //If there is an error it would be caught by catchAsync.
-	 const newAdmin = await adminSignupService(name, email, password)//If there is an error it would be caught by catchAsync.
+	 const newAdmin = await adminSignupService(name, email, password, authority)//If there is an error it would be caught by catchAsync.
 
 	const tokenObject = signJwt(newAdmin._id, true);
 	const publicUser = newAdmin.toPublic();
@@ -119,6 +122,48 @@ module.exports.adminSignup = catchAsync(async (req, res, next) => {
 	});
 });
 
+module.exports.adminChangePassword = catchAsync(async (req, res, next) => {
+	const { password } = req.body;
+
+	Admin.validatePassword(password); //If there is an error it would be caught by catchAsync.
+	 const passwordObject = generatePasswordHashAndSalt(password);
+	 const passwordSalt = passwordObject.salt;
+	 const passwordHash = passwordObject.hash;
+
+	 req.user.passwordHash = passwordHash;
+	 req.user.passwordSalt = passwordSalt;
+
+	const newAdmin = await Admin.findByIdAndUpdate(req.user._id, {
+		passwordHash: req.user.passwordHash,
+		passwordSalt: req.user.passwordSalt,
+	});
+
+	const tokenObject = signJwt(newAdmin._id, true);
+	const publicUser = newAdmin.toPublic();
+
+	res.status(200).json({
+		status: "success",
+		token: tokenObject.token,
+		expiresIn: tokenObject.expires,
+		user: publicUser,
+	});
+});
+
+module.exports.adminDelete = catchAsync(async (req, res, next) => {
+	const newAdmin = await Admin.findByIdAndDelete(req.params.id);
+	res.status(200).json({
+		status: "success",
+	});
+});
+
+module.exports.getAdmins = catchAsync(async (req, res, next) => {
+	const admins = await Admin.find();
+	res.status(200).json({
+		status: "success",
+		admins
+	});
+});
+
 module.exports.protect = () => {
 	return passport.authenticate("jwt", { session: false });
 };
@@ -126,7 +171,7 @@ module.exports.protect = () => {
 module.exports.restrictTo = (...roles) => {
 	return (req, res, next) => {
 		const myRole = req.user.constructor.modelName;
-
+		
 		if (!roles.includes(myRole))
 			return next(
 				new AppError(
@@ -134,6 +179,26 @@ module.exports.restrictTo = (...roles) => {
 					401
 				)
 			);
-		else return next();
+		else {
+			return next();
+		}
+	};
+};
+
+module.exports.authorize = (authority) => {
+	return (req, res, next) => {
+	console.log(authority)
+
+		const myAuthority = req.user.authority;
+		if(myAuthority !== authority)
+		return next(
+			new AppError(
+				`You are unauthorized. This route is restricted to certain type of users.`,
+				401
+			)
+		);
+		else {
+			return next();
+		}
 	};
 };

@@ -23,6 +23,19 @@ module.exports.dbSeeds = [
 		dateOfRelease: new Date(),
 	},
 	{
+		productName: "Digital effect",
+		productName_Ar: "ديجيتال إفيكت",
+		isCustomProduct: true,
+		sizesPrices: {
+			"15 x 21": 75,
+			"20 x 30": 100,
+			"30 x 40": 150,
+			"40 x 50": 250,
+			"50 x 60": 300,
+		},
+		dateOfRelease: new Date(),
+	},
+	{
 		productName: "Digital drawing",
 		productName_Ar: "رسم ديجيتال",
 		isCustomProduct: true,

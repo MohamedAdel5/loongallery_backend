@@ -35,7 +35,7 @@ const initializeDB = async () => {
 	if(adminsCount  <= 0)
 	{
 		logger.log('info', `✅ Admins are seeded --> count = ${adminsCount}`);
-		await authenticationController.adminSignupService(process.env.ADMIN_DEFAULT_NAME, process.env.ADMIN_DEFAULT_EMAIL, process.env.ADMIN_DEFAULT_PASSWORD);
+		await authenticationController.adminSignupService(process.env.ADMIN_DEFAULT_NAME, process.env.ADMIN_DEFAULT_EMAIL, process.env.ADMIN_DEFAULT_PASSWORD, 'primary');
 	}
 
 	logger.log('info', `✅ Finished db seeding successfully`);

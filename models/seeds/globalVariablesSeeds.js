@@ -6,6 +6,16 @@ module.exports.dbSeeds = [
 	},
 	{
 		globalObject: {
+			giftBowPrice: 50,
+		}
+	},
+	{
+		globalObject: {
+			giftWrapPrice: 50,
+		}
+	},
+	{
+		globalObject: {
 			metroStations: [
 				"Helwan",
 				"Ain Helwan",

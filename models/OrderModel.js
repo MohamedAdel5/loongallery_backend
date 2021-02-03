@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const idValidator = require("mongoose-id-validator");
 const orderedProductObject = require("./objects/orderedProductObject");
+const validator = require("validator");
+
 
 const orderSchema = new mongoose.Schema(
 	{
@@ -59,6 +61,11 @@ const orderSchema = new mongoose.Schema(
 		shippingFees: {
 			type: Number,
 			required: [true, "Shipping fees field must be specified."]
+		},
+		customerEmail: {
+			type: String,
+			trim: true,
+			validate: [validator.isEmail, "Email is invalid."]
 		},
 		// For Admins
 		seen: {

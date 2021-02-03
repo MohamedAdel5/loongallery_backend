@@ -4,6 +4,10 @@ const generalProductController = require("../controllers/generalProductControlle
 module.exports = async function () {
 	const globalVariables = await globalVariablesController.initializeGlobalVariables();
 	global.FACE_PRICE = globalVariables.facePrice;
+	global.GIFT_BOW_PRICE = globalVariables.giftBowPrice;
+	global.GIFT_WRAP_PRICE = globalVariables.giftWrapPrice;
+
+
 
 	const generalProductsGlobalVariables = await generalProductController.initializeGlobalVariables();
 	global.NON_CUSTOM_GENERAL_PRODUCTS = generalProductsGlobalVariables.nonCustomGeneralProducts;

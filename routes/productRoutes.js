@@ -9,7 +9,7 @@ router
 	.route("/")
 	.post(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		fileupload(),
 		productController.addProduct
 	)
@@ -20,13 +20,13 @@ router
 	.get(productController.getProduct)
 	.patch(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		fileupload(),
 		productController.updateProduct
 	)
 	.delete(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		productController.deleteProduct
 	);
 

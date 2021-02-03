@@ -76,6 +76,9 @@ const OrderedProductSchema = new mongoose.Schema(
 			required: [true, "Number of faces must be specified."],
 			min: 0,
 		},
+		otherNotes: {
+			type: String
+		},
 		quantity: {
 			type: Number,
 			required: [true, "Quantity must be specified."],
@@ -83,26 +86,26 @@ const OrderedProductSchema = new mongoose.Schema(
 		price: {
 			type: Number,
 			required: [true, "Price must be specified."],
-			validate: {
-				validator: function (value) {
-					let correctPrice = 0;
+			// validate: {
+			// 	validator: function (value) {
+			// 		let correctPrice = 0;
 
-					const facesCount = this.numberOfFaces === 0 ? 1 : this.numberOfFaces;
-					if (!!this.productID) {
-						correctPrice =
-							(NON_CUSTOM_GENERAL_PRODUCTS[this.generalProduct].sizesPrices[this.size] +
-								(facesCount - 1) * FACE_PRICE) *
-							this.quantity;
-					} else {
-						correctPrice =
-							(CUSTOM_GENERAL_PRODUCTS[this.generalProduct].sizesPrices[this.size] +
-								(facesCount - 1) * FACE_PRICE) *
-							this.quantity;
-					}
-					return value === correctPrice;
-				},
-				message: "The calculated price is incorrect",
-			},
+			// 		const facesCount = this.numberOfFaces === 0 ? 1 : this.numberOfFaces;
+			// 		if (!!this.productID) {
+			// 			correctPrice =
+			// 				(NON_CUSTOM_GENERAL_PRODUCTS[this.generalProduct].sizesPrices[this.size] +
+			// 					(facesCount - 1) * FACE_PRICE) *
+			// 				this.quantity;
+			// 		} else {
+			// 			correctPrice =
+			// 				(CUSTOM_GENERAL_PRODUCTS[this.generalProduct].sizesPrices[this.size] +
+			// 					(facesCount - 1) * FACE_PRICE) *
+			// 				this.quantity;
+			// 		}
+			// 		return value === correctPrice;
+			// 	},
+			// 	message: "The calculated price is incorrect",
+			// },
 		},
 	},
 	{

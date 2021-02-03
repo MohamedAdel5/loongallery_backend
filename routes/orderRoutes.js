@@ -9,13 +9,13 @@ router
 	.route("/")
 	.post(
 		// authenticationController.protect(),	//Any one can order.
-		// authenticationController.restrictTo("User"),
+		// authenticationController.restrictTo( "User"),
 		fileUpload(),
 		orderController.addOrder
 	)
 	.get(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		orderController.getOrders
 	);
 
@@ -24,21 +24,21 @@ router
 	.get(orderController.getOrder)
 	.delete(
 		authenticationController.protect(),
-		authenticationController.restrictTo("Admin"),
+		authenticationController.restrictTo( "Admin"),
 		orderController.deleteOrder
 	);
 
 router.patch(
 	"/:id/seen",
 	authenticationController.protect(),
-	authenticationController.restrictTo("Admin"),
+	authenticationController.restrictTo( "Admin"),
 	orderController.setSeenStatus
 );
 
 router.patch(
 	"/:id/delivered",
 	authenticationController.protect(),
-	authenticationController.restrictTo("Admin"),
+	authenticationController.restrictTo( "Admin"),
 	orderController.setDeliveredStatus
 );
 
