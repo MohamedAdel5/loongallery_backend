@@ -9,7 +9,6 @@ const Admin = require("../models/AdminModel");
 const passport = require("passport");
 
 const adminSignupService = async (name, email, password, authority) => {
-	console.log(name, email, password, authority);
 	const passwordObject = generatePasswordHashAndSalt(password);
 	const passwordSalt = passwordObject.salt;
 	const passwordHash = passwordObject.hash;
@@ -187,7 +186,6 @@ module.exports.restrictTo = (...roles) => {
 
 module.exports.authorize = (authority) => {
 	return (req, res, next) => {
-	console.log(authority)
 
 		const myAuthority = req.user.authority;
 		if(myAuthority !== authority)
