@@ -116,7 +116,7 @@ app.use(`${apiUrlBase}/database-backup`, databaseBackupRouter);
 
 //Setting Content-Security-Policy for images
 app.use(function (req, res, next) {
-	res.setHeader("Content-Security-Policy", "img-src 'self' https://via.placeholder.com 	https://loongallery.s3.us-east-2.amazonaws.com");
+	res.setHeader("Content-Security-Policy", "img-src 'self' https://via.placeholder.com 	https://loongallery.s3.us-east-2.amazonaws.com data:;");
 
 	return next();
 });
