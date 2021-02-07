@@ -44,7 +44,7 @@ module.exports.myOrders = catchAsync(async (req, res, next) => {
 	const totalUndelivered = await ordersQueryManager.totalCount(req.query, Order, {
 		userID: req.user._id,
 		deleted: { $ne: false },
-		delivered: false
+		delivered: {$ne: "delivered"}
 	});
 	res.status(200).json({ 
 		status: "success",
@@ -73,7 +73,7 @@ module.exports.getUserOrders = catchAsync(async (req, res, next) => {
 	const totalUndelivered = await ordersQueryManager.totalCount(req.query, Order, {
 		userID: req.params.id,
 		deleted: { $ne: false },
-		delivered: false
+		delivered: {$ne: "delivered"}
 	});
 	res.status(200).json({ 
 		status: "success",

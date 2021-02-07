@@ -1,0 +1,15 @@
+db.createView("LOON_GALLERY", "orders", 
+[
+	{ $lookup: { from: "users", localField: "userID", foreignField: "_id", as: "user" } },
+	{ $lookup: { from: "generalproducts", localField: "products.generalProduct", foreignField: "_id", as: "prod" } },
+	{ $project: { 
+			"date": { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+			"Order code": "$code",
+			"admin name": {$cond: { if: { $eq: [ "$user.isSocialAdmin", true ] }, then: "$user.name", else: '--' }},
+			"customer name": "$customerName",
+			"customer address": "$customerAddress",
+			"customer phone numbers": "$customerPhoneNumbers",
+			"products": {$concat: ["$prod.$.productName", " ", "$prod.$.size"]}
+		} 
+	}
+]);

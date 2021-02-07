@@ -91,6 +91,9 @@ const userSchema = new mongoose.Schema(
 			type: Boolean,
 			default: true,
 		},
+		isSocialAdmin:{
+			type: Boolean
+		}
 	},
 	{
 		strict: "throw",

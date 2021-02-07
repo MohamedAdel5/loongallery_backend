@@ -51,7 +51,7 @@ module.exports.login = catchAsync(async (req, res, next) => {
 });
 
 module.exports.signup = catchAsync(async (req, res, next) => {
-	const { name, phoneNumbers, addresses, email, password } = req.body;
+	const { name, phoneNumbers, addresses, email, password, isSocialAdmin } = req.body;
 
 	User.validatePassword(password); //If there is an error it would be caught by catchAsync.
 	const passwordObject = generatePasswordHashAndSalt(password);
@@ -67,6 +67,7 @@ module.exports.signup = catchAsync(async (req, res, next) => {
 		passwordSalt,
 		created_at: new Date(),
 		passwordLastChangedAt: new Date(),
+		isSocialAdmin
 	});
 
 	newUser = await newUser.save(); //If there is an error it would be caught by catchAsync.
@@ -184,11 +185,11 @@ module.exports.restrictTo = (...roles) => {
 	};
 };
 
-module.exports.authorize = (authority) => {
+module.exports.authorize = (...authorities) => {
 	return (req, res, next) => {
 
 		const myAuthority = req.user.authority;
-		if(myAuthority !== authority)
+		if(!authorities.includes(myAuthority))
 		return next(
 			new AppError(
 				`You are unauthorized. This route is restricted to certain type of users.`,
