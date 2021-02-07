@@ -9,12 +9,12 @@ module.exports.dbSeeds = [
 			"20 x 30": 100,
 			"30 x 40": 150,
 			"40 x 50": 250,
-			"50 x 60": 300,
+			"50 x 60": 300
 		},
 		dateOfRelease: new Date(),
 	},
 	{
-		productName: "Mersal",
+		productName: "Gift card",
 		productName_Ar: "مرسال",
 		isCustomProduct: false,
 		sizesPrices: {
@@ -22,6 +22,15 @@ module.exports.dbSeeds = [
 		},
 		dateOfRelease: new Date(),
 	},
+	// {
+	// 	productName: "Handmade products",
+	// 	productName_Ar: "أعمال يدوية",
+	// 	isCustomProduct: false,
+	// 	sizesPrices: {
+	// 		"One size": 40,
+	// 	},
+	// 	dateOfRelease: new Date(),
+	// },
 	{
 		productName: "Digital effect",
 		productName_Ar: "ديجيتال إفيكت",
@@ -32,6 +41,9 @@ module.exports.dbSeeds = [
 			"30 x 40": 150,
 			"40 x 50": 250,
 			"50 x 60": 300,
+			"70 x 50": 350,
+			"90 x 60": 350
+
 		},
 		dateOfRelease: new Date(),
 	},
@@ -40,11 +52,12 @@ module.exports.dbSeeds = [
 		productName_Ar: "رسم ديجيتال",
 		isCustomProduct: true,
 		sizesPrices: {
-			"15 x 21": 75,
 			"20 x 30": 100,
 			"30 x 40": 150,
 			"40 x 50": 250,
 			"50 x 60": 300,
+			"70 x 50": 350,
+			"90 x 60": 350
 		},
 		dateOfRelease: new Date(),
 	},
@@ -55,58 +68,59 @@ module.exports.dbSeeds = [
 		sizesPrices: {
 			"20 x 30": 200,
 			"30 x 40": 280,
+			"40 x 50": 350
 		},
 		dateOfRelease: new Date(),
 	},
-	{
-		productName: "Pencil drawing",
-		productName_Ar: "رسم بالقلم الرصاص",
-		isCustomProduct: true,
-		sizesPrices: {
-			"20 x 30": 200,
-			"30 x 40": 280,
-		},
-		dateOfRelease: new Date(),
-	},
-	{
-		productName: "Pen drawing",
-		productName_Ar: "رسم بالقلم الجاف",
-		isCustomProduct: true,
-		sizesPrices: {
-			"20 x 30": 200,
-			"30 x 40": 280,
-		},
-		dateOfRelease: new Date(),
-	},
-	{
-		productName: "Gouache",
-		productName_Ar: "رسم بألوان الجواش",
-		isCustomProduct: true,
-		sizesPrices: {
-			"20 x 30": 200,
-			"30 x 40": 280,
-		},
-		dateOfRelease: new Date(),
-	},
-	{
-		productName: "Watercolor",
-		productName_Ar: "رسم بالألوان المائية ",
-		isCustomProduct: true,
-		sizesPrices: {
-			"20 x 30": 200,
-			"30 x 40": 280,
-		},
-		dateOfRelease: new Date(),
-	},
-	{
-		productName: "Wood carving",
-		productName_Ar: "نحت على الخشب",
-		isCustomProduct: true,
-		sizesPrices: {
-			"One size": 200,
-		},
-		dateOfRelease: new Date(),
-	},
+	// {
+	// 	productName: "Pencil drawing",
+	// 	productName_Ar: "رسم بالقلم الرصاص",
+	// 	isCustomProduct: true,
+	// 	sizesPrices: {
+	// 		"20 x 30": 200,
+	// 		"30 x 40": 280,
+	// 	},
+	// 	dateOfRelease: new Date(),
+	// },
+	// {
+	// 	productName: "Pen drawing",
+	// 	productName_Ar: "رسم بالقلم الجاف",
+	// 	isCustomProduct: true,
+	// 	sizesPrices: {
+	// 		"20 x 30": 200,
+	// 		"30 x 40": 280,
+	// 	},
+	// 	dateOfRelease: new Date(),
+	// },
+	// {
+	// 	productName: "Gouache",
+	// 	productName_Ar: "رسم بألوان الجواش",
+	// 	isCustomProduct: true,
+	// 	sizesPrices: {
+	// 		"20 x 30": 200,
+	// 		"30 x 40": 280,
+	// 	},
+	// 	dateOfRelease: new Date(),
+	// },
+	// {
+	// 	productName: "Watercolor",
+	// 	productName_Ar: "رسم بالألوان المائية ",
+	// 	isCustomProduct: true,
+	// 	sizesPrices: {
+	// 		"20 x 30": 200,
+	// 		"30 x 40": 280,
+	// 	},
+	// 	dateOfRelease: new Date(),
+	// },
+	// {
+	// 	productName: "Wood carving",
+	// 	productName_Ar: "نحت على الخشب",
+	// 	isCustomProduct: true,
+	// 	sizesPrices: {
+	// 		"One size": 200,
+	// 	},
+	// 	dateOfRelease: new Date(),
+	// },
 ];
 
 

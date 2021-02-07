@@ -38,6 +38,7 @@ module.exports.addOrder = catchAsync(async (req, res, next) => {
 	if(order.shippingMethod || order.shippingMethod === 0) //Else will be caught by model validation
 		order.shippingFees = SHIPPING_FEES[order.shippingMethod].fees;
 	order.code = (await Order.estimatedDocumentCount()) + 1;
+	order.deliveredStatus = "undelivered";
 	const newOrder = await (await Order.create(order)).populate({ path: 'products.generalProduct', select: 'productName productName_Ar' }).execPopulate();
 	res.status(200).json({
 		status: "success",
@@ -69,7 +70,17 @@ module.exports.getOrders = catchAsync(async (req, res, next) => {
 
 	const totalUndelivered = await ordersQueryManager.totalCount(req.query, Order, {
 		deleted: { $ne: false },
-		delivered: false
+		deliveredStatus: "undelivered"
+	});
+
+	const totalInTransit = await ordersQueryManager.totalCount(req.query, Order, {
+		deleted: { $ne: false },
+		deliveredStatus: "in transit"
+	});
+
+	const totalRejected = await ordersQueryManager.totalCount(req.query, Order, {
+		deleted: { $ne: false },
+		deliveredStatus: "rejected"
 	});
 
 	res.status(200).json({
@@ -78,6 +89,8 @@ module.exports.getOrders = catchAsync(async (req, res, next) => {
 		totalSize,
 		totalUnseen,
 		totalUndelivered,
+		totalInTransit,
+		totalRejected,
 		orders,
 	});
 });
@@ -99,9 +112,18 @@ module.exports.setSeenStatus = catchAsync(async (req, res, next) => {
 });
 
 module.exports.setDeliveredStatus = catchAsync(async (req, res, next) => {
-	await Order.findOneAndUpdate({ _id: req.params.id }, { delivered: true });
+	await Order.findOneAndUpdate({ _id: req.params.id }, { deliveredStatus: req.query.status });
 	res.status(200).json({
 		status: "success",
 		message: "Delivered status set successfully",
 	});
 });
+
+module.exports.setDesignerDoneStatus = catchAsync(async (req, res, next) => {
+	await Order.findOneAndUpdate({ _id: req.params.id }, { designerDone: true });
+	res.status(200).json({
+		status: "success",
+		message: "Designer done status set successfully",
+	});
+});
+

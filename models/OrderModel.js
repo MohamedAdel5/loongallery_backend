@@ -72,9 +72,14 @@ const orderSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
-		delivered: {
-			type: Boolean,
+		deliveredStatus: {
+			type: String,
+			enum: ["delivered", "undelivered", "in transit", "rejected"],
 			default: false,
+		},
+		designerDone: {
+			type: Boolean,
+			default: false
 		},
 		deleted: {
 			type: Boolean,

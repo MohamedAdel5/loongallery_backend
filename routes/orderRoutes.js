@@ -32,6 +32,7 @@ router.patch(
 	"/:id/seen",
 	authenticationController.protect(),
 	authenticationController.restrictTo( "Admin"),
+	authenticationController.authorize( "manager"),
 	orderController.setSeenStatus
 );
 
@@ -39,7 +40,18 @@ router.patch(
 	"/:id/delivered",
 	authenticationController.protect(),
 	authenticationController.restrictTo( "Admin"),
+	authenticationController.authorize( "manager", "primary"),
 	orderController.setDeliveredStatus
 );
+
+router.patch(
+	"/:id/designer-done",
+	authenticationController.protect(),
+	authenticationController.restrictTo( "Admin"),
+	authenticationController.authorize( "designer"),
+	orderController.setDesignerDoneStatus
+);
+
+
 
 module.exports = router;
